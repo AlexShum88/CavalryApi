@@ -1,0 +1,1 @@
+web: ./build/install/com.elanor.cavalryapi/bin/com.elanor.cavalryapi
