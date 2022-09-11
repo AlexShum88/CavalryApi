@@ -9,7 +9,7 @@ import io.ktor.server.netty.*
 
 fun main() {
     DaoFactory.init()
-    embeddedServer(Netty, port = 8080) {
+    embeddedServer(Netty, port = System.getenv("PORT").toInt()) {
         configureSerialization()
         configureRouting()
     }.start(wait = true)
