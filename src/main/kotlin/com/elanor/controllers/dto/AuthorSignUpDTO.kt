@@ -7,7 +7,7 @@ data class AuthorSignUpDTO(
     val name: String,
     val login: String,
     val password: String,
-    val isAdmin: Boolean
+//    val isAdmin: Boolean
 ) {
 
 }

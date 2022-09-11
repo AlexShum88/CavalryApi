@@ -27,7 +27,8 @@ object AuthorsDao : IDao {
                 it[login] = author.login
                 it[password] = encryptPassword(author.password)
                 it[token] = tokenGenerator(author.login)
-                it[isAdmin] = author.isAdmin
+//                it[isAdmin] = author.isAdmin
+                it[isAdmin] = false
             }[id]
         }
     }
