@@ -11,9 +11,9 @@ object ItemsDao {
         Items.select { Items.generatorId.eq(generatorId) }.map { Items.rowToEntity(it) as Item }
     }
 
-    suspend fun getItemByGeneratorIdAndGrain(generatorId: Int, grain: Int): List<Item> = dbQuery {
+    suspend fun getItemByGeneratorIdAndGrain(generatorId: Int, grain: Int): Item? = dbQuery {
         Items.select { Items.generatorId.eq(generatorId) and Items.grain.eq(grain) }
-            .map { Items.rowToEntity(it) as Item }
+            .map { Items.rowToEntity(it) as Item }.singleOrNull()
     }
 
     suspend fun insertItem(item: ItemDTO): Int = dbQuery {

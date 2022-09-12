@@ -9,9 +9,9 @@ import io.ktor.server.routing.*
 fun Routing.generatorsRouting() {
     route("generators") {
 
-        get {
-            GeneratorsController(call).getGeneratorsFacade()
-        }
+//        get {
+//            GeneratorsController(call).getGeneratorsFacade()
+//        }
         getAllGenerators()
         insertGenerator()//
 //        selectGeneratorById()

@@ -5,6 +5,7 @@ import com.elanor.controllers.dto.GeneratorIdGrainTextDTO
 import com.elanor.controllers.dto.IdDTO
 import com.elanor.controllers.dto.ItemDTO
 import com.elanor.dao.model.authors.AuthorsDao
+import com.elanor.dao.model.entity.Item
 import com.elanor.dao.model.generators.GeneratorsDao
 import com.elanor.dao.model.items.ItemsDao
 import io.ktor.http.*
@@ -26,7 +27,8 @@ class ItemsController(
         val cr = call.receive<GeneratorIdGrainDTO>()
         val generatorId = cr.generatorId
         val grain = cr.grain
-        call.respond(HttpStatusCode.OK, itemsDao.getItemByGeneratorIdAndGrain(generatorId, grain))
+        val res: Item = itemsDao.getItemByGeneratorIdAndGrain(generatorId, grain) ?: return call.respond(HttpStatusCode.NotFound)
+        call.respond(HttpStatusCode.OK, res)
     }
 
     suspend fun insertItem() {
@@ -99,20 +101,21 @@ class ItemsController(
 
     suspend fun updateAll() {
         val items = call.receive<List<ItemDTO>>()
-        val generatorId: Int = try {
-            items[0].generatorId
+        var count = 0
+        try {
+            val generatorId: Int = items[0].generatorId
+            if (!isAuthorOfGeneratorOrAdmin(generatorId)) return
+            items.forEach {
+                if (it.generatorId == generatorId) {
+                    ItemsDao.updateAll(it)
+                    count++
+                }
+            }
         } catch (e: Exception) {
             call.respond(HttpStatusCode.NotFound, e.message.toString())
             return
         }
-        if (!isAuthorOfGeneratorOrAdmin(generatorId)) return
-        var count = 0
-        items.forEach {
-            if (it.generatorId == generatorId) {
-                ItemsDao.updateAll(it)
-                count++
-            }
-        }
+
         call.respond(HttpStatusCode.OK, "updated $count items")
     }
 

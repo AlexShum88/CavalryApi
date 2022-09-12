@@ -23,15 +23,15 @@ open class AuthorsThemesController(
 
     suspend fun selectNameById() {
         val id = call.receive<IdDTO>().id
-        val result = iDao.selectNameById(id) ?: call.respond(HttpStatusCode.BadRequest, "no such in db")
-        call.respond(HttpStatusCode.OK, result)
+        val result: String = iDao.selectNameById(id) ?: return call.respond(HttpStatusCode.BadRequest, "no such in db")
+        call.respond(HttpStatusCode.OK, NameDTO(result))
     }
 
     suspend fun selectIdByName() {
         val name = call.receive<NameDTO>().name
         if (name.isBlank()) call.respond(HttpStatusCode.BadRequest, "name cant be blank")
-        val result = iDao.selectIdByName(name) ?: call.respond(HttpStatusCode.BadRequest, "no such in db")
-        call.respond(HttpStatusCode.OK, result)
+        val result: Int = iDao.selectIdByName(name) ?: return call.respond(HttpStatusCode.BadRequest, "no such in db")
+        call.respond(HttpStatusCode.OK, IdDTO(result))
     }
 
     suspend fun getAuthorsAndThemes() {

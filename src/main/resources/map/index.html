@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing map</title>
+  <style>
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  border-style: groove;
+}
+</style>
+</head>
+<body>
+
+<h3>Map of requests.</h3>
+<p>
+  Token must be request header field "token".
+</p>
+<p>
+  JSON field with "?" - can be null.
+</p>
+
+
+<table>
+  <tr>
+    <th>Local address</th>
+    <th>Method</th>
+    <th>Request body</th>
+    <th>Respond</th>
+    <th>Token</th>
+    <th>Comment</th>
+  </tr>
+  <tr>
+    <td>/ - you are here</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>/getAuthorsAndThemes</td>
+    <td>get</td>
+    <td></td>
+    <td>{
+      “authors”: [{“id”: Int, “name”: String}],
+      “themes”: [{“id”: Int, “name”: String}]
+      }</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/authors/all</td>
+    <td>get</td>
+    <td></td>
+    <td>[{“id”: Int, “name”: String}]</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/authors/signUp</td>
+    <td>post</td>
+    <td>{"name": String,"login": String,"password": String}</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/authors/logIn</td>
+    <td>post</td>
+    <td>{"login": String,"password": String}</td>
+    <td>{"id":Int, "token": String}</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/authors/delete</td>
+    <td>delete</td>
+    <td>{"id":Int}</td>
+    <td></td>
+    <td>id and token must belong to one user</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/authors/updateName</td>
+    <td>post</td>
+    <td>{“id”: Int, “name”: String}</td>
+    <td></td>
+    <td>id and token must belong to one user</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/all</td>
+    <td>get</td>
+    <td></td>
+    <td>[{“id”: Int, “name”: String}]</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/insert</td>
+    <td>post</td>
+    <td>{
+      "name": String,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}</td>
+    <td></td>
+    <td>it must be admin user</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/byId</td>
+    <td>get</td>
+    <td>{"id": Int}</td>
+    <td>{"name": String}</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/byName</td>
+    <td>get</td>
+    <td>{"name": String}</td>
+    <td>{"id": Int}</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/updateName</td>
+    <td> post</td>
+    <td>{“id”: Int, “name”: String}</td>
+    <td></td>
+    <td>it must be admin user</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/delete</td>
+    <td>delete</td>
+    <td>{"id": Int}</td>
+    <td></td>
+    <td>it must be admin user</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/themes/updateTheme</td>
+    <td>post</td>
+    <td>{
+      "id": Int,
+      "name": String,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}</td>
+    <td></td>
+    <td>it must be admin user</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/all</td>
+    <td>get</td>
+    <td></td>
+    <td>[{
+      "generatorName": String,
+      "author": String,
+      "theme": String,
+      "minVal": Int,
+      "maxVal": Int}]</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/insert</td>
+    <td>post</td>
+    <td>{
+      "id" :Int,
+      "name": String,
+      "authorId": Int,
+      "themeId": Int,
+      "minVal": Int,
+      "maxVal": Int}</td>
+    <td></td>
+    <td>any author</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/edit/generator/update</td>
+    <td> post</td>
+    <td>{
+      "id" :Int,
+      "name": String,
+      "authorId": Int,
+      "themeId": Int,
+      "minVal": Int,
+      "maxVal": Int}</td>
+    <td></td>
+    <td>it must be author of generator or admin</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/edit/generator/delete</td>
+    <td>delete</td>
+    <td>{"id": Int}</td>
+    <td></td>
+    <td>author of generator or admin</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/edit/items/insert</td>
+    <td>post</td>
+    <td>{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}</td>
+    <td></td>
+    <td>author of generator or admin</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/edit/items/update</td>
+    <td>post</td>
+    <td>{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}</td>
+    <td></td>
+    <td>author of generator or admin</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/edit/items/updateMany</td>
+    <td>post</td>
+    <td>[{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}]</td>
+    <td></td>
+    <td>author of generator or admin</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/edit/items/delete</td>
+    <td>delete</td>
+    <td>{"generatorId": Int, "grain": Int}</td>
+    <td></td>
+    <td>author of generator or admin</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/byName</td>
+    <td>get</td>
+    <td>{"name": String}</td>
+    <td>{
+      "generator": {
+      "id" :Int,
+      "name": String,
+      "authorId": Int,
+      "themeId": Int,
+      "minVal": Int,
+      "maxVal": Int
+      },
+      "items": [{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}]
+      }</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/byAuthor</td>
+    <td>get</td>
+    <td>{"id":Int}</td>
+    <td>[ {
+      "id" :Int,
+      "name": String,
+      "authorId": Int,
+      "themeId": Int,
+      "minVal": Int,
+      "maxVal": Int
+      } ]</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/byTheme</td>
+    <td>get</td>
+    <td>{"id": Int}</td>
+    <td>[ {
+      "id" :Int,
+      "name": String,
+      "authorId": Int,
+      "themeId": Int,
+      "minVal": Int,
+      "maxVal": Int
+      } ]</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/allItems</td>
+    <td>get</td>
+    <td>{"id": Int}</td>
+    <td>[{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}]</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>/generators/oneItem</td>
+    <td>get</td>
+    <td>{"generatorId":Int, "grain":Int}</td>
+    <td>{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+</table>
+
+</body>
+</html>

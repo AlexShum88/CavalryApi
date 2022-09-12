@@ -61,7 +61,7 @@ object ThemesDao : IDao {
 
     override suspend fun selectNameById(id: Int): String? = dbQuery {
         with(theme) {
-            slice(Authors.name)
+            slice(name)
                 .select { theme.id.eq(id) }
                 .map { it[name] }.singleOrNull()
         }
@@ -71,7 +71,7 @@ object ThemesDao : IDao {
 
     override suspend fun selectIdByName(name: String): Int? = dbQuery {
         with(theme) {
-            slice(Authors.id)
+            slice(id)
                 .select { theme.name.eq(name) }
                 .map { it[id] }.singleOrNull()
         }
