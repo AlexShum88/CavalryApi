@@ -51,7 +51,7 @@ class GeneratorsController(val call: ApplicationCall) {
             )) as Generator
         val generatorWithItems = GeneratorThemeItemsTDO(
             generator = generator,
-            theme = ThemesDao.selecctThemeById(generator.themeId) ?: return call.respond(
+            theme = ThemesDao.selectThemeById(generator.themeId) ?: return call.respond(
                 HttpStatusCode.BadRequest,
                 "no such theme"
             ),

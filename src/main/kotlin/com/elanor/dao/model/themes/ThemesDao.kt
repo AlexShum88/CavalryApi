@@ -88,7 +88,7 @@ object ThemesDao : IDao {
         Themes.deleteWhere { Themes.id.eq(id) } > 0
     }
 
-    override suspend fun selecctThemeById(id: Int): Theme? = dbQuery{
+    suspend fun selectThemeById(id: Int): Theme? = dbQuery{
         Themes
             .select { Themes.id.eq(id) }
             .map { Themes.rowToEntity(it) as Theme }.singleOrNull()
