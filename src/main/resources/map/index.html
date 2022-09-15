@@ -19,7 +19,7 @@ th, td {
   Token must be request header field "token".
 </p>
 <p>
-  JSON field with "?" - can be null.
+  JSON field with "?" - can be null (and in that case you can skip them in request).
 </p>
 
 
@@ -76,14 +76,14 @@ th, td {
     <td></td>
     <td>login, password length = 16</td>
   </tr>
-  <tr>
-    <td>/authors/delete</td>
-    <td>delete</td>
-    <td>{"id":Int}</td>
-    <td></td>
-    <td>id and token must belong to one user</td>
-    <td></td>
-  </tr>
+<!--  <tr>-->
+<!--    <td>/authors/delete</td>-->
+<!--    <td>delete</td>-->
+<!--    <td>{"id":Int}</td>-->
+<!--    <td></td>-->
+<!--    <td>id and token must belong to one user</td>-->
+<!--    <td></td>-->
+<!--  </tr>-->
   <tr>
     <td>/authors/updateName</td>
     <td>post</td>
@@ -92,6 +92,16 @@ th, td {
     <td>id and token must belong to one user</td>
     <td>name length = 16</td>
   </tr>
+
+  <tr>
+    <td>/authors/updateAdmin</td>
+    <td>post</td>
+    <td>{“id”: Int, “isAdmin”: Boolean}</td>
+    <td></td>
+    <td>only admin can change admin status</td>
+    <td></td>
+  </tr>
+
   <tr>
     <td>/themes/all</td>
     <td>get</td>
@@ -179,7 +189,6 @@ th, td {
     <td>/generators/insert</td>
     <td>post</td>
     <td>{
-      "id": Int,
       "name": String,
       "authorId": Int,
       "themeId": Int,
@@ -204,7 +213,7 @@ th, td {
     <td>delete</td>
     <td>{"id": Int}</td>
     <td></td>
-    <td>author of generator or admin</td>
+    <td>author of generator</td>
     <td></td>
   </tr>
   <tr>
@@ -222,7 +231,7 @@ th, td {
       "param5": String?,
       "param6": String?}</td>
     <td></td>
-    <td>author of generator or admin</td>
+    <td>author of generator</td>
     <td>length: text = 64, param = 16, description = 128</td>
   </tr>
   <tr>
@@ -240,7 +249,7 @@ th, td {
       "param5": String?,
       "param6": String?}</td>
     <td></td>
-    <td>author of generator or admin</td>
+    <td>author of generator</td>
     <td>length: text = 64, param = 16, description = 128</td>
   </tr>
   <tr>
@@ -258,7 +267,7 @@ th, td {
       "param5": String?,
       "param6": String?}]</td>
     <td></td>
-    <td>author of generator or admin</td>
+    <td>author of generator</td>
     <td>length: text = 64, param = 16, description = 128</td>
   </tr>
   <tr>
@@ -266,7 +275,7 @@ th, td {
     <td>delete</td>
     <td>{"generatorId": Int, "grain": Int}</td>
     <td></td>
-    <td>author of generator or admin</td>
+    <td>author of generator</td>
     <td></td>
   </tr>
   <tr>
@@ -280,6 +289,17 @@ th, td {
       "authorId": Int,
       "themeId": Int,
       "description": String?},
+
+      "theme": {
+      "id": Int,
+      "name": String,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?},
+
       "items": [{
       "generatorId": Int,
       "grain": Int,

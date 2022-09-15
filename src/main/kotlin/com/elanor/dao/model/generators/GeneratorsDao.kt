@@ -1,6 +1,7 @@
 package com.elanor.dao.model.generators
 
 import com.elanor.controllers.dto.GeneratorFacadeDTO
+import com.elanor.controllers.dto.GeneratorInsertDTO
 import com.elanor.controllers.dto.GeneratorUpdateDTO
 import com.elanor.dao.DaoFactory.dbQuery
 import com.elanor.dao.model.authors.Authors
@@ -15,7 +16,7 @@ object GeneratorsDao : IGeneratorsDao {
         Generators.selectAll().map { Generators.rowToEntity(it) as Generator }
     }
 
-    override suspend fun insertGenerator(generator: Generator): Int = dbQuery {
+    override suspend fun insertGenerator(generator: GeneratorInsertDTO): Int = dbQuery {
         Generators.insert {
             it[name] = generator.name
             it[authorId] = generator.authorId

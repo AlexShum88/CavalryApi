@@ -1,7 +1,6 @@
 package com.elanor.controllers
 
 import com.elanor.controllers.dto.GeneratorIdGrainDTO
-import com.elanor.controllers.dto.GeneratorIdGrainTextDTO
 import com.elanor.controllers.dto.IdDTO
 import com.elanor.controllers.dto.ItemDTO
 import com.elanor.dao.model.authors.AuthorsDao
@@ -34,7 +33,7 @@ class ItemsController(
     suspend fun insertItem() {
         val item = call.receive<ItemDTO>()
         try {
-            if (!isAuthorOfGeneratorOrAdmin(item.generatorId)) return
+            if (!isAuthorOfGenerator(item.generatorId)) return
             itemsDao.insertItem(item)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.Conflict, e.message ?: "not inserted")
@@ -50,7 +49,7 @@ class ItemsController(
     suspend fun deleteItemsByGeneratorIdAndGrain() {
         val cr = call.receive<GeneratorIdGrainDTO>()
         try {
-            if (!isAuthorOfGeneratorOrAdmin(cr.generatorId)) return
+            if (!isAuthorOfGenerator(cr.generatorId)) return
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, e.message.toString())
         }
@@ -104,7 +103,7 @@ class ItemsController(
         var count = 0
         try {
             val generatorId: Int = items[0].generatorId
-            if (!isAuthorOfGeneratorOrAdmin(generatorId)) return
+            if (!isAuthorOfGenerator(generatorId)) return
             items.forEach {
                 if (it.generatorId == generatorId) {
                     ItemsDao.updateAll(it)
@@ -122,7 +121,7 @@ class ItemsController(
     suspend fun update() {
         val item = call.receive<ItemDTO>()
         try {
-            if (!isAuthorOfGeneratorOrAdmin(item.generatorId)) return
+            if (!isAuthorOfGenerator(item.generatorId)) return
             ItemsDao.updateAll(item)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.NotFound, e.message.toString())
@@ -131,12 +130,12 @@ class ItemsController(
         call.respond(HttpStatusCode.OK, "update item")
     }
 
-    private suspend fun isAuthorOfGeneratorOrAdmin(generatorId: Int): Boolean {
+    private suspend fun isAuthorOfGenerator(generatorId: Int): Boolean {
         val token: String =
             (call.request.headers["token"] ?: call.respond(HttpStatusCode.BadRequest, "no authorised user")
                 .also { return false }) as String
         if (!GeneratorsDao.isAuthorHasGenerator(generatorId, AuthorsDao.idByToken(token) ?: return false)
-            && !AuthorsDao.isAdminToken(token)
+//            && !AuthorsDao.isAdminToken(token)
         )
             call.respond(HttpStatusCode.BadRequest, "user is no author or admin")
                 .also { return false }

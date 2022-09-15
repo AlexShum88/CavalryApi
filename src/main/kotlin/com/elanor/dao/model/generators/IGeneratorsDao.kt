@@ -1,11 +1,12 @@
 package com.elanor.dao.model.generators
 
+import com.elanor.controllers.dto.GeneratorInsertDTO
 import com.elanor.dao.model.entity.Generator
 
 interface IGeneratorsDao {
     suspend fun getAllGenerators(): List<Generator>
 
-    suspend fun insertGenerator(generator: Generator): Int
+    suspend fun insertGenerator(generator: GeneratorInsertDTO): Int
 
     suspend fun selectGeneratorById(id: Int): Generator?
 

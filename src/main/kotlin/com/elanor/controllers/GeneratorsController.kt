@@ -3,9 +3,9 @@ package com.elanor.controllers
 import com.elanor.controllers.dto.*
 import com.elanor.dao.model.authors.AuthorsDao
 import com.elanor.dao.model.entity.Generator
-import com.elanor.dao.model.entity.Item
 import com.elanor.dao.model.generators.GeneratorsDao
 import com.elanor.dao.model.items.ItemsDao
+import com.elanor.dao.model.themes.ThemesDao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -21,7 +21,7 @@ class GeneratorsController(val call: ApplicationCall) {
 
     suspend fun insertGenerator() {
         val id = isAuthor()
-        val generator = call.receive<Generator>()
+        val generator = call.receive<GeneratorInsertDTO>()
         if (id < 0 || generator.authorId != id) call.respond(
             HttpStatusCode.BadRequest,
             "author.id != generator.authorId"
@@ -49,8 +49,12 @@ class GeneratorsController(val call: ApplicationCall) {
                 HttpStatusCode.NotFound,
                 "cant find this name"
             )) as Generator
-        val generatorWithItems = GeneratorItemsTDO(
+        val generatorWithItems = GeneratorThemeItemsTDO(
             generator = generator,
+            theme = ThemesDao.selecctThemeById(generator.themeId) ?: return call.respond(
+                HttpStatusCode.BadRequest,
+                "no such theme"
+            ),
             items = ItemsDao.getItemsByGeneratorId(generator.id)
         )
         call.respond(HttpStatusCode.OK, generatorWithItems)
@@ -84,7 +88,7 @@ class GeneratorsController(val call: ApplicationCall) {
 
     suspend fun editGenerator() {
         val generator = call.receive<GeneratorUpdateDTO>()
-        if (!isAuthorOfGeneratorOrAdmin(generatorId = generator.id)) return
+        if (!isAuthorOfGenerator(generatorId = generator.id)) return
 
         generators.selectGeneratorById(generator.id) ?: return call.respond(
             HttpStatusCode.BadRequest,
@@ -95,18 +99,23 @@ class GeneratorsController(val call: ApplicationCall) {
         ) return call.respond(HttpStatusCode.BadRequest, "this name is already using. Rename generator")
 
 
-        val res = GeneratorsDao.updateGenerator(generator)
-        call.respond(HttpStatusCode.OK, "generator $res updated")
+        try {
+            GeneratorsDao.updateGenerator(generator)
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.Conflict, e.message.toString())
+            return
+        }
+        call.respond(HttpStatusCode.OK, "generator updated")
     }
 
     suspend fun deleteGenerator() {
         val id = call.receive<IdDTO>().id
-        if (!isAuthorOfGeneratorOrAdmin(id)) return
+        if (!isAuthorOfGenerator(id)) return
         GeneratorsDao.deleteGenerator(id)
         call.respond(HttpStatusCode.OK, "generator $id deleted")
     }
 
-    private suspend fun checkGenerator(generator: Generator): Boolean {
+    private suspend fun checkGenerator(generator: GeneratorInsertDTO): Boolean {
 
         if (generators.selectGeneratorByName(generator.name) != null) {
             call.respond(
@@ -140,12 +149,12 @@ class GeneratorsController(val call: ApplicationCall) {
         return id ?: -1
     }
 
-    private suspend fun isAuthorOfGeneratorOrAdmin(generatorId: Int): Boolean {
+    private suspend fun isAuthorOfGenerator(generatorId: Int): Boolean {
         val token: String =
             (call.request.headers["token"] ?: call.respond(HttpStatusCode.BadRequest, "no authorised user")
                 .also { return false }) as String
         if (!GeneratorsDao.isAuthorHasGenerator(generatorId, AuthorsDao.idByToken(token) ?: return false)
-            && !AuthorsDao.isAdminToken(token)
+//            && !AuthorsDao.isAdminToken(token)
         )
             call.respond(HttpStatusCode.BadRequest, "this user is not author of this generator")
                 .also { return false }

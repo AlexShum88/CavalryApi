@@ -87,4 +87,10 @@ object ThemesDao : IDao {
     override suspend fun delete(id: Int): Boolean = dbQuery {
         Themes.deleteWhere { Themes.id.eq(id) } > 0
     }
+
+    override suspend fun selecctThemeById(id: Int): Theme? = dbQuery{
+        Themes
+            .select { Themes.id.eq(id) }
+            .map { Themes.rowToEntity(it) as Theme }.singleOrNull()
+    }
 }

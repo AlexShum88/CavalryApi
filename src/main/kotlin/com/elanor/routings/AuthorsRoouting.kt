@@ -11,10 +11,11 @@ fun Routing.authorsRouting(){
         getAllAuthors()
         insertAuthor()
 //        selectIdByName()
-//        selectNameById()
-        deleteAuthor()
+        selectNameById()
+//        deleteAuthor()
         updateAuthorName()
         logIn()
+        updateAdminStatus()
     }
 }
 
@@ -56,5 +57,11 @@ private fun Route.deleteAuthor(){
 private fun Route.updateAuthorName(){
     post("updateName") {
         AuthorsController(call).updateName()
+    }
+}
+
+private fun Route.updateAdminStatus(){
+    post("updateAdmin") {
+        AuthorsController(call).updateToAdmin()
     }
 }

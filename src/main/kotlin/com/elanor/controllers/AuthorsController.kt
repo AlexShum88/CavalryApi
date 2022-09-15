@@ -1,5 +1,6 @@
 package com.elanor.controllers
 
+import com.elanor.controllers.dto.AdminDTO
 import com.elanor.controllers.dto.IdDTO
 import com.elanor.controllers.dto.IdNameDTO
 import com.elanor.controllers.dto.UserDTO
@@ -48,6 +49,15 @@ class AuthorsController(val call: ApplicationCall) : AuthorsThemesController(cal
             return
         }
         call.respond(HttpStatusCode.OK, update)
+    }
+
+    suspend fun updateToAdmin(){
+        val user = call.receive<AdminDTO>()
+        val token =
+            call.request.headers["token"] ?: return call.respond(HttpStatusCode.BadRequest, "null token")
+        if(!AuthorsDao.isAdminToken(token)) return call.respond(HttpStatusCode.Conflict, "only admin can change admin status")
+        AuthorsDao.updateAdminStatus(user.id, user.isAdmin)
+        call.respond(HttpStatusCode.OK, "status changed")
     }
 
     suspend fun delete() {
