@@ -1,14 +1,16 @@
 package com.elanor.dao.model.authors
 
+import com.elanor.dao.model.users.Users
+
 private const val cryptor = 12
 
-fun Authors.encryptPassword(password: String): String {
+fun Users.encryptPassword(password: String): String {
     return password.map {
         it.toInt() + cryptor
     }.toString()
 }
 
-fun Authors.decryptPassword(crypt: String): String {
+fun Users.decryptPassword(crypt: String): String {
     val strB = StringBuilder()
     crypt.filter { it!='[' && it!=']' }.split(", ") .map {
         it.toInt() - cryptor

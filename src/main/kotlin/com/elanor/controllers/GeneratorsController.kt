@@ -1,9 +1,6 @@
 package com.elanor.controllers
 
-import com.elanor.controllers.dto.GeneratorItemsTDO
-import com.elanor.controllers.dto.IdDTO
-import com.elanor.controllers.dto.ItemDTO
-import com.elanor.controllers.dto.NameDTO
+import com.elanor.controllers.dto.*
 import com.elanor.dao.model.authors.AuthorsDao
 import com.elanor.dao.model.entity.Generator
 import com.elanor.dao.model.entity.Item
@@ -25,25 +22,20 @@ class GeneratorsController(val call: ApplicationCall) {
     suspend fun insertGenerator() {
         val id = isAuthor()
         val generator = call.receive<Generator>()
-        if (id<0 || generator.authorId!=id) call.respond(HttpStatusCode.BadRequest, "author.id != generator.authorId").also { return }
-        if (checkGenerator(generator, false)) {
+        if (id < 0 || generator.authorId != id) call.respond(
+            HttpStatusCode.BadRequest,
+            "author.id != generator.authorId"
+        ).also { return }
+        if (checkGenerator(generator)) {
             val gid = GeneratorsDao.insertGenerator(generator)
-            for (i in generator.minVal..generator.maxVal) {
-                ItemsDao.insertItem(
-                    ItemDTO(
-                        generatorId = gid,
-                        grain = i,
-                        text = i.toString(),
-                    )
-                )
-            }
-            call.respond(HttpStatusCode.OK)
+
+            call.respond(HttpStatusCode.OK, "generator $gid inserted")
         }
     }
 
     suspend fun selectGeneratorById() {
         val id = call.receive<IdDTO>().id
-        val generator = generators.selectGeneratorById(id) ?: call.respond(
+        val generator: Generator = generators.selectGeneratorById(id) ?: call.respond(
             HttpStatusCode.NotFound,
             "cant find this id"
         ) as Generator
@@ -91,13 +83,20 @@ class GeneratorsController(val call: ApplicationCall) {
     }
 
     suspend fun editGenerator() {
-        val generator = call.receive<Generator>()
-
+        val generator = call.receive<GeneratorUpdateDTO>()
         if (!isAuthorOfGeneratorOrAdmin(generatorId = generator.id)) return
 
-        if (checkGenerator(generator, true))
-            GeneratorsDao.updateGenerator(generator)
-        call.respond(HttpStatusCode.OK)
+        generators.selectGeneratorById(generator.id) ?: return call.respond(
+            HttpStatusCode.BadRequest,
+            "no such generator"
+        )
+        if (!generator.name.isNullOrBlank() &&
+            generators.selectGeneratorByName(generator.name) != null
+        ) return call.respond(HttpStatusCode.BadRequest, "this name is already using. Rename generator")
+
+
+        val res = GeneratorsDao.updateGenerator(generator)
+        call.respond(HttpStatusCode.OK, "generator $res updated")
     }
 
     suspend fun deleteGenerator() {
@@ -107,9 +106,9 @@ class GeneratorsController(val call: ApplicationCall) {
         call.respond(HttpStatusCode.OK, "generator $id deleted")
     }
 
-    private suspend fun checkGenerator(generator: Generator, isEdit: Boolean): Boolean {
+    private suspend fun checkGenerator(generator: Generator): Boolean {
 
-        if (!isEdit && generators.selectGeneratorByName(generator.name) != null) {
+        if (generators.selectGeneratorByName(generator.name) != null) {
             call.respond(
                 HttpStatusCode.BadRequest,
                 "rename generator"
@@ -128,13 +127,7 @@ class GeneratorsController(val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, "no such theme")
             return false
         }
-        if (generator.minVal >= generator.maxVal) {
-            call.respond(
-                HttpStatusCode.BadRequest,
-                "max val must be greater than man val"
-            )
-            return false
-        }
+
         return true
     }
 

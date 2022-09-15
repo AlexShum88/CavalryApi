@@ -8,6 +8,5 @@ data class Generator(
     val name: String,
     val authorId: Int,
     val themeId: Int,
-    val minVal: Int,
-    val maxVal: Int,
+    val description: String?
 ): Entity

@@ -11,17 +11,15 @@ data class GeneratorFacadeDTO(
     val generatorName: String,
     val author: String,
     val theme: String,
-    val minVal: Int,
-    val maxVal: Int
+    val description: String?
 ) {
 
-    companion object{
+    companion object {
         fun mapRowToGeneratorFacade(row: ResultRow): GeneratorFacadeDTO = GeneratorFacadeDTO(
             generatorName = row[Generators.name],
             author = row[Authors.name],
             theme = row[Themes.name],
-            minVal = row[Generators.minVal],
-            maxVal = row[Generators.maxVal]
+            description = row[Generators.description]
         )
     }
 }

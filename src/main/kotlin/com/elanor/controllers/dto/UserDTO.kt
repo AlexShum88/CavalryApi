@@ -3,11 +3,7 @@ package com.elanor.controllers.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AuthorSignUpDTO(
-    val name: String,
+data class UserDTO(
     val login: String,
     val password: String,
-//    val isAdmin: Boolean
-) {
-
-}
+)

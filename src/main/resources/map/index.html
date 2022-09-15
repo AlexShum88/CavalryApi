@@ -63,10 +63,10 @@ th, td {
   <tr>
     <td>/authors/signUp</td>
     <td>post</td>
-    <td>{"name": String,"login": String,"password": String}</td>
+    <td>{"login": String,"password": String}</td>
     <td></td>
     <td></td>
-    <td></td>
+    <td>login, password length = 16</td>
   </tr>
   <tr>
     <td>/authors/logIn</td>
@@ -74,7 +74,7 @@ th, td {
     <td>{"login": String,"password": String}</td>
     <td>{"id":Int, "token": String}</td>
     <td></td>
-    <td></td>
+    <td>login, password length = 16</td>
   </tr>
   <tr>
     <td>/authors/delete</td>
@@ -90,7 +90,7 @@ th, td {
     <td>{“id”: Int, “name”: String}</td>
     <td></td>
     <td>id and token must belong to one user</td>
-    <td></td>
+    <td>name length = 16</td>
   </tr>
   <tr>
     <td>/themes/all</td>
@@ -113,7 +113,7 @@ th, td {
       "param6": String?}</td>
     <td></td>
     <td>it must be admin user</td>
-    <td></td>
+    <td>length: name = 32, param = 16</td>
   </tr>
   <tr>
     <td>/themes/byId</td>
@@ -129,7 +129,7 @@ th, td {
     <td>{"name": String}</td>
     <td>{"id": Int}</td>
     <td></td>
-    <td></td>
+    <td>length: name = 32</td>
   </tr>
   <tr>
     <td>/themes/updateName</td>
@@ -137,7 +137,7 @@ th, td {
     <td>{“id”: Int, “name”: String}</td>
     <td></td>
     <td>it must be admin user</td>
-    <td></td>
+    <td>length: name = 32</td>
   </tr>
   <tr>
     <td>/themes/delete</td>
@@ -161,7 +161,7 @@ th, td {
       "param6": String?}</td>
     <td></td>
     <td>it must be admin user</td>
-    <td></td>
+    <td>length: name = 32, param = 16</td>
   </tr>
   <tr>
     <td>/generators/all</td>
@@ -171,8 +171,7 @@ th, td {
       "generatorName": String,
       "author": String,
       "theme": String,
-      "minVal": Int,
-      "maxVal": Int}]</td>
+      "description": String?}]</td>
     <td></td>
     <td></td>
   </tr>
@@ -180,29 +179,25 @@ th, td {
     <td>/generators/insert</td>
     <td>post</td>
     <td>{
-      "id" :Int,
+      "id": Int,
       "name": String,
       "authorId": Int,
       "themeId": Int,
-      "minVal": Int,
-      "maxVal": Int}</td>
+      "description": String?}</td>
     <td></td>
     <td>any author</td>
-    <td></td>
+    <td>length: name = 64, description = 256</td>
   </tr>
   <tr>
     <td>/generators/edit/generator/update</td>
     <td> post</td>
     <td>{
       "id" :Int,
-      "name": String,
-      "authorId": Int,
-      "themeId": Int,
-      "minVal": Int,
-      "maxVal": Int}</td>
+      "name": String?,
+      "description": String?}</td>
     <td></td>
     <td>it must be author of generator or admin</td>
-    <td></td>
+    <td>length: name = 32, param = 16</td>
   </tr>
   <tr>
     <td>/generators/edit/generator/delete</td>
@@ -228,7 +223,7 @@ th, td {
       "param6": String?}</td>
     <td></td>
     <td>author of generator or admin</td>
-    <td></td>
+    <td>length: text = 64, param = 16, description = 128</td>
   </tr>
   <tr>
     <td>/generators/edit/items/update</td>
@@ -246,7 +241,7 @@ th, td {
       "param6": String?}</td>
     <td></td>
     <td>author of generator or admin</td>
-    <td></td>
+    <td>length: text = 64, param = 16, description = 128</td>
   </tr>
   <tr>
     <td>/generators/edit/items/updateMany</td>
@@ -264,7 +259,7 @@ th, td {
       "param6": String?}]</td>
     <td></td>
     <td>author of generator or admin</td>
-    <td></td>
+    <td>length: text = 64, param = 16, description = 128</td>
   </tr>
   <tr>
     <td>/generators/edit/items/delete</td>
@@ -284,9 +279,7 @@ th, td {
       "name": String,
       "authorId": Int,
       "themeId": Int,
-      "minVal": Int,
-      "maxVal": Int
-      },
+      "description": String?},
       "items": [{
       "generatorId": Int,
       "grain": Int,
@@ -300,7 +293,7 @@ th, td {
       "param6": String?}]
       }</td>
     <td></td>
-    <td></td>
+    <td>length: name = 64</td>
   </tr>
   <tr>
     <td>/generators/byAuthor</td>
@@ -311,9 +304,7 @@ th, td {
       "name": String,
       "authorId": Int,
       "themeId": Int,
-      "minVal": Int,
-      "maxVal": Int
-      } ]</td>
+      "description": String?} ]</td>
     <td></td>
     <td></td>
   </tr>
@@ -326,9 +317,7 @@ th, td {
       "name": String,
       "authorId": Int,
       "themeId": Int,
-      "minVal": Int,
-      "maxVal": Int
-      } ]</td>
+      "description": String?} ]</td>
     <td></td>
     <td></td>
   </tr>

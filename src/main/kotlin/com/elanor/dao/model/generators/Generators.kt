@@ -10,20 +10,17 @@ import org.jetbrains.exposed.sql.Table
 
 object Generators: Table(), RowToEntity {
     val id = integer("id").autoIncrement()
-    val name = varchar("name", 128)
+    val name = varchar("name", 64)
     val authorId = reference("author_id", Authors.id)
     val themeId = reference("theme_id", Themes.id)
-    val minVal = integer("min_val")
-    val maxVal = integer("max_val")
-
+    val description = varchar("description", 256).nullable()
 
     override fun rowToEntity(row: ResultRow): Entity = Generator(
         id =  row[id],
         name = row[name],
         authorId = row[authorId],
         themeId = row[themeId],
-        minVal = row[minVal],
-        maxVal = row[maxVal],
+        description = row[description]
     )
 
 }
