@@ -1,6 +1,7 @@
 package com.elanor.dao.model.items
 
 import com.elanor.controllers.dto.ItemDTO
+import com.elanor.controllers.dto.ItemUpdateDTO
 import com.elanor.dao.DaoFactory.dbQuery
 import com.elanor.dao.model.entity.Item
 import org.jetbrains.exposed.sql.*
@@ -95,18 +96,24 @@ object ItemsDao {
         }
     }
 
-    suspend fun updateAll(item: ItemDTO): Boolean = dbQuery {
+    suspend fun updateAll(item: ItemUpdateDTO): Boolean = dbQuery {
         Items.update({ Items.generatorId.eq(item.generatorId) and Items.grain.eq(item.grain) }) {
-            it[text] = item.text
-            it[description] = item.description
-            it[param1] = item.param1
-            it[param2] = item.param2
-            it[param3] = item.param3
-            it[param4] = item.param4
-            it[param5] = item.param5
-            it[param6] = item.param6
-
+            if (!item.text.isNullOrBlank())it[text] = item.text
+            if (!item.description.isNullOrBlank())it[description] = item.description
+            if (!item.param1.isNullOrBlank())it[param1] = item.param1
+            if (!item.param2.isNullOrBlank())it[param2] = item.param2
+            if (!item.param3.isNullOrBlank())it[param3] = item.param3
+            if (!item.param4.isNullOrBlank())it[param4] = item.param4
+            if (!item.param5.isNullOrBlank())it[param5] = item.param5
+            if (!item.param6.isNullOrBlank())it[param6] = item.param6
         } > 0
 
+    }
+
+    suspend fun getAllGrains(idGenerator: Int):List<Int> = dbQuery {
+        Items
+            .slice(Items.grain)
+            .select { Items.generatorId.eq(idGenerator) }
+            .map { it[Items.grain] }
     }
 }

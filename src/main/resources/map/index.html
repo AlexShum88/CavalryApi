@@ -120,10 +120,11 @@ th, td {
       "param3": String?,
       "param4": String?,
       "param5": String?,
-      "param6": String?}</td>
+      "param6": String?,
+      "description": String?}</td>
     <td></td>
     <td>it must be admin user</td>
-    <td>length: name = 32, param = 16</td>
+    <td>length: name = 64, param = 16, description = 256</td>
   </tr>
   <tr>
     <td>/themes/byId</td>
@@ -139,7 +140,7 @@ th, td {
     <td>{"name": String}</td>
     <td>{"id": Int}</td>
     <td></td>
-    <td>length: name = 32</td>
+    <td>length: name = 64</td>
   </tr>
   <tr>
     <td>/themes/updateName</td>
@@ -147,7 +148,7 @@ th, td {
     <td>{“id”: Int, “name”: String}</td>
     <td></td>
     <td>it must be admin user</td>
-    <td>length: name = 32</td>
+    <td>length: name = 64</td>
   </tr>
   <tr>
     <td>/themes/delete</td>
@@ -168,10 +169,11 @@ th, td {
       "param3": String?,
       "param4": String?,
       "param5": String?,
-      "param6": String?}</td>
+      "param6": String?,
+      "description": String?}</td>
     <td></td>
     <td>it must be admin user</td>
-    <td>length: name = 32, param = 16</td>
+    <td>length: name = 64, param = 16, description = 256</td>
   </tr>
   <tr>
     <td>/generators/all</td>
@@ -230,6 +232,24 @@ th, td {
       "param4": String?,
       "param5": String?,
       "param6": String?}</td>
+    <td></td>
+    <td>author of generator</td>
+    <td>length: text = 64, param = 16, description = 128</td>
+  </tr>
+  <tr>
+    <td>/generators/edit/items/insertMany</td>
+    <td>post</td>
+    <td>[{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}]</td>
     <td></td>
     <td>author of generator</td>
     <td>length: text = 64, param = 16, description = 128</td>
@@ -342,7 +362,7 @@ th, td {
     <td></td>
   </tr>
   <tr>
-    <td>/generators/allItems</td>
+    <td>/generators/generator/allItems</td>
     <td>get</td>
     <td>{"id": Int}</td>
     <td>[{
@@ -360,9 +380,37 @@ th, td {
     <td></td>
   </tr>
   <tr>
-    <td>/generators/oneItem</td>
+    <td>/generators/generator/oneItem</td>
     <td>get</td>
     <td>{"generatorId":Int, "grain":Int}</td>
+    <td>{
+      "generatorId": Int,
+      "grain": Int,
+      "text": String,
+      "description": String?,
+      "param1": String?,
+      "param2": String?,
+      "param3": String?,
+      "param4": String?,
+      "param5": String?,
+      "param6": String?}</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>/generators/generator/allGrains</td>
+    <td>get</td>
+    <td>{"id":Int}</td>
+    <td>[{"id":Int}]</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>/generators/generator/randomItem</td>
+    <td>get</td>
+    <td>{"id":Int}</td>
     <td>{
       "generatorId": Int,
       "grain": Int,

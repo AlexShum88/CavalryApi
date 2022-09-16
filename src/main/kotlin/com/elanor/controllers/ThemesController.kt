@@ -29,7 +29,7 @@ class ThemesController(val call: ApplicationCall) : AuthorsThemesController(call
         val theme = call.receive<Theme>()
         if (!checkTokenIsAdmin()) return
         val result = try {
-            ThemesDao.updateAll(theme)
+            ThemesDao.updateTheme(theme)
             "theme is updated"
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, e.message.toString())

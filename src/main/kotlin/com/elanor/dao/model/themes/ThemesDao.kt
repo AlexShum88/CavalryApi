@@ -4,7 +4,6 @@ import com.elanor.controllers.dto.IdNameDTO
 import com.elanor.controllers.dto.ThemeDTO
 import com.elanor.dao.DaoFactory.dbQuery
 import com.elanor.dao.model.IDao
-import com.elanor.dao.model.authors.Authors
 import com.elanor.dao.model.entity.Theme
 import org.jetbrains.exposed.sql.*
 
@@ -30,19 +29,21 @@ object ThemesDao : IDao {
                 it[param4] = newTheme.param4
                 it[param5] = newTheme.param5
                 it[param6] = newTheme.param6
+                it[description] = newTheme.description
             }[id]
         }
     }
 
-    suspend fun updateAll(updateTheme: Theme): Boolean = dbQuery {
+    suspend fun updateTheme(updateTheme: Theme): Boolean = dbQuery {
         Themes.update({ Themes.id.eq(updateTheme.id) }) {
             it[name] = updateTheme.name
-            it[param1] = updateTheme.param1
-            it[param2] = updateTheme.param2
-            it[param3] = updateTheme.param3
-            it[param4] = updateTheme.param4
-            it[param5] = updateTheme.param5
-            it[param6] = updateTheme.param6
+            if (!updateTheme.param1.isNullOrBlank())it[param1] = updateTheme.param1
+            if (!updateTheme.param2.isNullOrBlank())it[param2] = updateTheme.param2
+            if (!updateTheme.param3.isNullOrBlank())it[param3] = updateTheme.param3
+            if (!updateTheme.param4.isNullOrBlank())it[param4] = updateTheme.param4
+            if (!updateTheme.param5.isNullOrBlank())it[param5] = updateTheme.param5
+            if (!updateTheme.param6.isNullOrBlank())it[param6] = updateTheme.param6
+            if (!updateTheme.description.isNullOrBlank())it[description] = updateTheme.description
         } > 0
 
     }

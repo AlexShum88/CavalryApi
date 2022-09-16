@@ -12,4 +12,5 @@ data class Theme(
     val param4: String? = null,
     val param5: String? = null,
     val param6: String? = null,
+    val description: String? = null
 ) : Entity

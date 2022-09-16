@@ -3,6 +3,7 @@ package com.elanor.controllers
 import com.elanor.controllers.dto.GeneratorIdGrainDTO
 import com.elanor.controllers.dto.IdDTO
 import com.elanor.controllers.dto.ItemDTO
+import com.elanor.controllers.dto.ItemUpdateDTO
 import com.elanor.dao.model.authors.AuthorsDao
 import com.elanor.dao.model.entity.Item
 import com.elanor.dao.model.generators.GeneratorsDao
@@ -11,6 +12,8 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import java.lang.NullPointerException
+import kotlin.random.Random
 
 class ItemsController(
     val call: ApplicationCall
@@ -39,6 +42,29 @@ class ItemsController(
             call.respond(HttpStatusCode.Conflict, e.message ?: "not inserted")
         }
         call.respond(HttpStatusCode.OK, "item inserted")
+    }
+
+    suspend fun insertItems() {
+        val items = call.receive<List<ItemDTO>>()
+        val grains = items.map { it.grain }.toSet()
+        if (items.size > grains.size) return call.respond(HttpStatusCode.BadRequest, "some grains duplicate")
+        var count = 0
+        try {
+            val generatorId: Int = items[0].generatorId
+            if (!isAuthorOfGenerator(generatorId)) return
+            items.forEach {
+                if (it.generatorId == generatorId) {
+                    ItemsDao.insertItem(it)
+                    count++
+                }
+            }
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.NotFound, e.message.toString())
+            return
+        }
+
+        call.respond(HttpStatusCode.OK, "inserted $count items")
+
     }
 
     suspend fun deleteItemsByGeneratorId() {
@@ -99,7 +125,7 @@ class ItemsController(
 //    }
 
     suspend fun updateAll() {
-        val items = call.receive<List<ItemDTO>>()
+        val items = call.receive<List<ItemUpdateDTO>>()
         var count = 0
         try {
             val generatorId: Int = items[0].generatorId
@@ -119,7 +145,7 @@ class ItemsController(
     }
 
     suspend fun update() {
-        val item = call.receive<ItemDTO>()
+        val item = call.receive<ItemUpdateDTO>()
         try {
             if (!isAuthorOfGenerator(item.generatorId)) return
             ItemsDao.updateAll(item)
@@ -128,6 +154,30 @@ class ItemsController(
             return
         }
         call.respond(HttpStatusCode.OK, "update item")
+    }
+
+    suspend fun getRandomItemByGeneratorIdAndGrain() {
+        val item = call.receive<IdDTO>()
+        val res = try{
+            val grain = ItemsDao.getAllGrains(item.id).random(Random)
+            ItemsDao.getItemByGeneratorIdAndGrain(item.id, grain) ?: throw NullPointerException("no such item")
+        }
+        catch (e: Exception){
+            call.respond(HttpStatusCode.BadRequest, e.message.toString())
+            return
+        }
+
+        call.respond(HttpStatusCode.OK, res)
+    }
+
+    suspend fun getAllGrainsOfGenerator(){
+        val item = call.receive<IdDTO>()
+        val res = try{ ItemsDao.getAllGrains(item.id).map{ IdDTO(it) } }
+        catch (e: Exception){
+            call.respond(HttpStatusCode.BadRequest, e.message.toString())
+            return
+        }
+        call.respond(HttpStatusCode.OK, res)
     }
 
     private suspend fun isAuthorOfGenerator(generatorId: Int): Boolean {
@@ -141,4 +191,6 @@ class ItemsController(
                 .also { return false }
         return true
     }
+
+
 }

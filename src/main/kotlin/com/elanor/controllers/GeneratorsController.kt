@@ -33,15 +33,6 @@ class GeneratorsController(val call: ApplicationCall) {
         }
     }
 
-    suspend fun selectGeneratorById() {
-        val id = call.receive<IdDTO>().id
-        val generator: Generator = generators.selectGeneratorById(id) ?: call.respond(
-            HttpStatusCode.NotFound,
-            "cant find this id"
-        ) as Generator
-        call.respond(HttpStatusCode.OK, generator)
-    }
-
     suspend fun selectGeneratorByName() {
         val name = call.receive<NameDTO>().name
         val generator: Generator =
@@ -49,6 +40,23 @@ class GeneratorsController(val call: ApplicationCall) {
                 HttpStatusCode.NotFound,
                 "cant find this name"
             )) as Generator
+        val generatorWithItems = GeneratorThemeItemsTDO(
+            generator = generator,
+            theme = ThemesDao.selectThemeById(generator.themeId) ?: return call.respond(
+                HttpStatusCode.BadRequest,
+                "no such theme"
+            ),
+            items = ItemsDao.getItemsByGeneratorId(generator.id)
+        )
+        call.respond(HttpStatusCode.OK, generatorWithItems)
+    }
+
+    suspend fun selectGeneratorById() {
+        val id = call.receive<IdDTO>().id
+        val generator: Generator = generators.selectGeneratorById(id) ?: call.respond(
+            HttpStatusCode.NotFound,
+            "cant find this id"
+        ) as Generator
         val generatorWithItems = GeneratorThemeItemsTDO(
             generator = generator,
             theme = ThemesDao.selectThemeById(generator.themeId) ?: return call.respond(

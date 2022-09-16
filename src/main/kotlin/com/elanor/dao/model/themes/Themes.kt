@@ -7,13 +7,14 @@ import org.jetbrains.exposed.sql.ResultRow
 
 object Themes: TableBase() {
     val id = integer("id").autoIncrement()
-    val name = varchar("name", 128)
+    val name = varchar("name", 64)
     val param1 = varchar("param1", 16).nullable()
     val param2 = varchar("param2", 16).nullable()
     val param3 = varchar("param3", 16).nullable()
     val param4 = varchar("param4", 16).nullable()
     val param5 = varchar("param5", 16).nullable()
     val param6 = varchar("param6", 16).nullable()
+    val description = varchar("description", 256).nullable()
 
     override fun rowToEntity(row: ResultRow): Entity = Theme(
         id = row[id],
@@ -24,6 +25,7 @@ object Themes: TableBase() {
         param4 = row[param4],
         param5 = row[param5],
         param6 = row[param6],
+        description = row[description]
 
     )
 }

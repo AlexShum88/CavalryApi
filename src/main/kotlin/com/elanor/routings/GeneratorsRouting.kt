@@ -13,14 +13,18 @@ fun Routing.generatorsRouting() {
 //            GeneratorsController(call).getGeneratorsFacade()
 //        }
         getAllGenerators()
-        insertGenerator()//
-//        selectGeneratorById()
+        insertGenerator()
+        selectGeneratorById()
         selectGeneratorByName()
         selectGeneratorsByAuthor()
         selectGeneratorsByTheme()
-        editGenerator()//
-        itemsOfGenerator()
-        itemFromGenerator()
+        editGenerator()
+        route("generator"){
+            itemsOfGenerator()
+            itemFromGenerator()
+            randomItem()
+            allGrains()
+        }
     }
 }
 
@@ -57,6 +61,9 @@ private fun Route.editGenerator(){
             post("insert") {
                 ItemsController(call).insertItem()
             }
+            post("insertMany") {
+                ItemsController(call).insertItems()
+            }
             delete("delete") {
                 ItemsController(call).deleteItemsByGeneratorIdAndGrain()
             }
@@ -73,6 +80,11 @@ private fun Route.insertGenerator() {
 private fun Route.selectGeneratorByName() {
     get("byName") {
         GeneratorsController(call).selectGeneratorByName()
+    }
+}
+private fun Route.selectGeneratorById() {
+    get("byId") {
+        GeneratorsController(call).selectGeneratorById()
     }
 }
 
@@ -100,3 +112,14 @@ private fun Route.itemFromGenerator(){
     }
 }
 
+private fun Route.randomItem(){
+    get ("randomItem"){
+        ItemsController(call).getRandomItemByGeneratorIdAndGrain()
+    }
+}
+
+private fun Route.allGrains(){
+    get ("allGrains"){
+        ItemsController(call).getAllGrainsOfGenerator()
+    }
+}
