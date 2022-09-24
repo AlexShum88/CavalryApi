@@ -6,7 +6,7 @@ import com.elanor.dao.model.entity.Entity
 import com.elanor.dao.model.users.Users
 import org.jetbrains.exposed.sql.ResultRow
 
-object Authors: TableBase() {
+object Authors: TableBase("authors") {
     val id = integer("id").autoIncrement()
     val name = varchar("name", 16)
     val isAdmin = bool("is_admin")

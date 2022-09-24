@@ -5,7 +5,7 @@ import com.elanor.dao.model.entity.Entity
 import com.elanor.dao.model.entity.Theme
 import org.jetbrains.exposed.sql.ResultRow
 
-object Themes: TableBase() {
+object Themes: TableBase("themes") {
     val id = integer("id").autoIncrement()
     val name = varchar("name", 64)
     val param1 = varchar("param1", 16).nullable()

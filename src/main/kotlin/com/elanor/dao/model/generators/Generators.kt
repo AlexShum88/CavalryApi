@@ -8,7 +8,7 @@ import com.elanor.dao.model.themes.Themes
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 
-object Generators: Table(), RowToEntity {
+object Generators: Table("generators"), RowToEntity {
     val id = integer("id").autoIncrement()
     val name = varchar("name", 64)
     val authorId = reference("author_id", Authors.id)

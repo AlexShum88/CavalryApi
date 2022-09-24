@@ -5,7 +5,7 @@ import com.elanor.dao.model.entity.Entity
 import com.elanor.dao.model.entity.User
 import org.jetbrains.exposed.sql.ResultRow
 
-object Users: TableBase() {
+object Users: TableBase("users") {
     val id = integer("id").autoIncrement()
     val login = varchar("login", 16)
     val password = varchar("password", 128)

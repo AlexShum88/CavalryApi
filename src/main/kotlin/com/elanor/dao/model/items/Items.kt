@@ -6,7 +6,7 @@ import com.elanor.dao.model.entity.Item
 import com.elanor.dao.model.generators.Generators
 import org.jetbrains.exposed.sql.ResultRow
 
-object Items : TableBase() {
+object Items : TableBase("items") {
     val id = integer("id").autoIncrement()
     val generatorId = reference("generator_id", Generators.id)
     val grain = integer("grain")
