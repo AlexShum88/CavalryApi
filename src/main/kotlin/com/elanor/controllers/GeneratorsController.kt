@@ -82,7 +82,7 @@ class GeneratorsController(val call: ApplicationCall) {
     suspend fun selectGeneratorsByTheme() {
         val themeId = call.receive<IdDTO>().id
         val generators: List<Generator> = try {
-            generators.selectGeneratorsByAuthor(themeId)
+            generators.selectGeneratorsByTheme(themeId)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.NotFound, "no such id")
             return
