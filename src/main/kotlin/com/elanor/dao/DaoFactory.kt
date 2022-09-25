@@ -15,9 +15,16 @@ object DaoFactory {
 //        val jdbcURL = "jdbc:mysql://oliadkuxrl9xdugh.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/u8d2kcohih5fga3n"
 //        val username = "ze450iycjtthy0ex"
 //        val password = "rq20zdp07lzo9tpm"
-        val jdbcURL = "jdbc:mysql://containers-us-west-30.railway.app:7873/railway"
-        val username = "root"
-        val password = "FYUdgmsa1tDStMnVoda6"
+//        val jdbcURL = "jdbc:mysql://containers-us-west-30.railway.app:7873/railway"
+//        val username = "root"
+//        val password = "FYUdgmsa1tDStMnVoda6"
+//        val jdbcURL = "jdbc:mysql://eu-central.connect.psdb.cloud/cavalrydb?sslMode=VERIFY_IDENTITY"
+//        val username = "03h6ib19v53figqmhvzw"
+//        val password = "pscale_pw_wV3EcrLSSI1OMBsJTLYyxYjSL5VfsR4grlhKzc25wdl"
+        val jdbcURL = "jdbc:mysql://sql.freedb.tech:3306/freedb_cavalrydb"
+        val username = "freedb_elentin"
+        val password = "5zB7gg**?k#cvYB"
+
 
 
         val database = Database.connect(jdbcURL, driverClassName, user = username,
