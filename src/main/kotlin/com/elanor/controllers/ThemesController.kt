@@ -56,6 +56,15 @@ class ThemesController(val call: ApplicationCall) : AuthorsThemesController(call
         call.respond(HttpStatusCode.OK, update)
     }
 
+    suspend fun getAllThemes() {
+        val res = try {
+            ThemesDao.getAllThemes()
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.Conflict, e.message.toString()).also { return }
+        }
+        call.respond(HttpStatusCode.OK, res)
+    }
+
     suspend fun delete() {
         if (!checkTokenIsAdmin()) return
         val id = call.receive<IdDTO>().id

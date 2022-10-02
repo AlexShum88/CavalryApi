@@ -20,7 +20,7 @@ fun Routing.themesRouting() {
 
 private fun Route.getAllThemes() {
     get("all") {
-        ThemesController(call).selectAll()
+        ThemesController(call).getAllThemes()
     }
 }
 

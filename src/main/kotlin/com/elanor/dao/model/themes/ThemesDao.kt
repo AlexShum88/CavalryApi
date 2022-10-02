@@ -37,13 +37,13 @@ object ThemesDao : IDao {
     suspend fun updateTheme(updateTheme: Theme): Boolean = dbQuery {
         Themes.update({ Themes.id.eq(updateTheme.id) }) {
             it[name] = updateTheme.name
-            if (!updateTheme.param1.isNullOrBlank())it[param1] = updateTheme.param1
-            if (!updateTheme.param2.isNullOrBlank())it[param2] = updateTheme.param2
-            if (!updateTheme.param3.isNullOrBlank())it[param3] = updateTheme.param3
-            if (!updateTheme.param4.isNullOrBlank())it[param4] = updateTheme.param4
-            if (!updateTheme.param5.isNullOrBlank())it[param5] = updateTheme.param5
-            if (!updateTheme.param6.isNullOrBlank())it[param6] = updateTheme.param6
-            if (!updateTheme.description.isNullOrBlank())it[description] = updateTheme.description
+            if (!updateTheme.param1.isNullOrBlank()) it[param1] = updateTheme.param1
+            if (!updateTheme.param2.isNullOrBlank()) it[param2] = updateTheme.param2
+            if (!updateTheme.param3.isNullOrBlank()) it[param3] = updateTheme.param3
+            if (!updateTheme.param4.isNullOrBlank()) it[param4] = updateTheme.param4
+            if (!updateTheme.param5.isNullOrBlank()) it[param5] = updateTheme.param5
+            if (!updateTheme.param6.isNullOrBlank()) it[param6] = updateTheme.param6
+            if (!updateTheme.description.isNullOrBlank()) it[description] = updateTheme.description
         } > 0
 
     }
@@ -79,19 +79,25 @@ object ThemesDao : IDao {
 
     }
 
-    override suspend fun updateName(id: Int, newName: String): Boolean = dbQuery{
+    override suspend fun updateName(id: Int, newName: String): Boolean = dbQuery {
         Themes.update({ Themes.id.eq(id) }) {
             it[name] = newName
-        }>0
+        } > 0
     }
 
     override suspend fun delete(id: Int): Boolean = dbQuery {
         Themes.deleteWhere { Themes.id.eq(id) } > 0
     }
 
-    suspend fun selectThemeById(id: Int): Theme? = dbQuery{
+    suspend fun selectThemeById(id: Int): Theme? = dbQuery {
         Themes
             .select { Themes.id.eq(id) }
             .map { Themes.rowToEntity(it) as Theme }.singleOrNull()
+    }
+
+    suspend fun getAllThemes(): List<Theme> = dbQuery {
+        Themes
+            .selectAll()
+            .map { Themes.rowToEntity(it) as Theme }
     }
 }
