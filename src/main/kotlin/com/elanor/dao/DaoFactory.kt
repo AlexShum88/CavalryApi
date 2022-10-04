@@ -21,9 +21,9 @@ object DaoFactory {
 //        val jdbcURL = "jdbc:mysql://eu-central.connect.psdb.cloud/cavalrydb?sslMode=VERIFY_IDENTITY"
 //        val username = "03h6ib19v53figqmhvzw"
 //        val password = "pscale_pw_wV3EcrLSSI1OMBsJTLYyxYjSL5VfsR4grlhKzc25wdl"
-        val jdbcURL = "jdbc:mysql://sql.freedb.tech:3306/freedb_cavalrydb"
-        val username = "freedb_elentin"
-        val password = "5zB7gg**?k#cvYB"
+        val jdbcURL = "jdbc:mysql://${System.getenv("URL")}"
+        val username = System.getenv("USERNAME")
+        val password = System.getenv("PASSWORD")
 
 
 
